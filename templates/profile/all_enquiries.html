@@ -1,0 +1,61 @@
+{%extends '../base/base.html'%}
+{%block content%}
+<div class="content">
+  <div class="">
+          {%if messages%}
+              {%for message in messages%}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">{{message}}<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
+              {%endfor%}
+            {%endif%}
+  </div>
+
+  <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title"> ALL ENQUIRIES </h4>
+              </div>
+              <div class="card-body">
+
+                <table class="table" id="dataTable">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>Name</th>
+                      <th>Course</th>
+                      <th>Expected Date</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                     {%for data in enquiries%}
+                        <tr>
+                          <td><a href="{%url 'view_enquiry' data.id %}"><b>{{data.first_name |capfirst}} {{data.last_name |capfirst}}</b></a></td>
+                          <td>{{data.course}}</td>
+                          <td>{{data.expected_date|date:"M d, Y (h:i A)"}}</td>
+                          <td>
+                            {% if data.status == '0'%}
+                            <h6 class="text-info">Pending</h6>
+                            {% elif data.status == '1'%}
+                            <h6 class="text-danger">Not Interested</h6>
+                            {% elif data.status == '2'%}
+                            <h6 class="text-success">Enrolled</h6>
+
+                            {%endif%}
+
+
+                          </td>
+                        </tr>
+                     {%endfor%}
+                  </tbody>
+              </table>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+
+</div>
+
+
+
+{%endblock%}

@@ -1,0 +1,350 @@
+
+{%extends '../base/base.html'%}
+{%load static%}
+
+{%block content%}
+<div class="content">
+  <div class="">
+          {%if messages%}
+              {%for message in messages%}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">{{message}}<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
+              {%endfor%}
+            {%endif%}
+  </div>
+
+  <div class="row">
+      <div class="{%if data.status == '2' and balance == 0%} col-md-12 {%elif data.status == '1'%} col-md-12 {%else%} col-md-4{%endif%}">
+        <div class="card card-user">
+              <div class="image">
+                <img src="{%static 'images/profile_background.jpg'%}" alt="...">
+              </div>
+              <div class="card-body">
+                <div class="author">
+                  <a href="#">
+                    <img class="avatar border-gray" src="{% if data.gender == '0'%}{%static 'img/male.png'%} {%else%} {%static 'img/female.png'%}{%endif%}" alt="...">
+                    <h5 class="title">{{data.first_name}} {{data.last_name}} </h5>
+                  </a>
+                  
+                </div>
+                {%if data.status == '1'%}
+                 <p class="description text-center">
+                  <span style="font-size: 25px;" class="badge badge-danger">Not Interested</span>
+                </p>
+                {%elif data.status == '2'%}
+                <p class="description text-center">
+                  <span style="font-size: 20px;" class="badge badge-success">Enrolled</span> 
+                </p>
+                {%if data.lms_id == '0' and course_fee != balance %}
+                <p class="description text-center">
+                  <a href="{%url 'create_user' data.id %}" class="btn btn-round btn-warning">Create LMS ID</a>
+                </p>
+                {%elif data.lms_id == '1'%}
+                <p class="description text-center">
+                  <small class="text-warning">LMS ID Created !</small>
+                </p>
+                {%endif%}
+
+                {%endif%}
+
+                 
+                <p class="description text-center">
+                  {{data.course}}
+                </p>
+                <p class="description text-center">
+                   {% if data.course_type == '0'%}Basic Training {%else%} On Job Training {%endif%}
+                </p>
+
+                {%if data.status == '2'%}
+                <p class="description text-center">
+                  <b><u>Course Date :</u> {{start_date}}</b>
+                </p>
+                {%if balance == 0%}
+                  <p class="description text-center">
+                  <b><u>Course Fees : {{data.course_fee}} </u><span class="text-danger">(Full Paid)</span></b>
+                </p>
+                {%endif%}
+                {%endif%}
+
+                <center><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">View All Details</button></center>
+               
+
+
+              </div>
+              <div class="card-footer">
+                <hr>
+                <!--
+                <div class="button-container">
+                  <div class="row">
+                    <div class="col-lg-3 col-md-6 col-6 ml-auto">
+                      <h5>12
+                        <br>
+                        <small>Files</small>
+                      </h5>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-6 ml-auto mr-auto">
+                      <h5>2GB
+                        <br>
+                        <small>Used</small>
+                      </h5>
+                    </div>
+                    <div class="col-lg-3 mr-auto">
+                      <h5>24,6$
+                        <br>
+                        <small>Spent</small>
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+
+              -->
+              </div>
+            </div>
+
+      </div>
+
+         {%if data.status == '0'%}
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title text-center"> Follow Up </h4>
+              </div>
+              <div class="card-body">
+                <form method="post" action="{%url 'follow_up' data.id %}" autocomplete="off">
+                  {%csrf_token%}
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                       <label>Follow Up</label>
+                        <textarea class="form-control textarea" name="follow_up" required="required"></textarea>
+                      </div>
+                    </div>
+                    </div>
+                  <div class="row">
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label>Date & Time</label>
+                        <input type="date" class="form-control date_time" value="" name="date" required="required">
+                      </div>
+                    </div>
+                  
+                    <div class="col-md-7">
+                      <div class="">
+                        <label>Status</label>
+                        <select class="form-control" id="select_status" name="status">
+                            <option value="0">Pending</option>
+                            <option value="1">Not Interested</option>
+                            <option value="2">Enrolled</option>
+                            
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" id="if_enrolled">
+                    <div class="col-md-5">
+                      <div>
+                        <label>Batch</label>
+                        <select class="form-control" name="batch">
+                          {%for batch in batchs%}
+                            <option value="{{batch.id}}">{{batch.title}}</option>
+                          {%endfor%}
+                        </select>
+                      </div>
+                    </div>
+                  
+                    <div class="col-md-7">
+                      <div class="">
+                        <label>Finalized Fees</label>
+                        <input type="number" name="course_fee" class="form-control" value="">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="update ml-auto mr-auto">
+                     
+                        <button type="submit" class="btn btn-primary btn-round btn-lg">Submit</button>
+                      
+                      
+
+                    </div>
+                  </div>
+
+                </form>               
+              </div>
+            </div>
+          </div>
+          {% elif data.status == '2' and balance != 0%}
+           <div class="col-md-8">
+            <div class="card">
+              
+              <div class="card-header">
+                <center>
+                <div class="row">
+                  <div class="col-md-6"><h5><i>Course Fees:</i>&nbsp; {{data.course_fee}}</h5></div>
+                  <div class="col-md-6"><h5><i>Balance:</i>&nbsp; {{balance}}</h5></div>
+                </div>
+               </center>
+
+                <h4 class="card-title text-center"> ACCOUNTS </h4>
+              </div>
+              <div class="card-body">
+                <form method="post" action="{%url 'accounts' data.id %}" autocomplete="off">
+                  {%csrf_token%}
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                       <label>Payment Details</label>
+                        <textarea class="form-control textarea" name="details" required="required"></textarea>
+                      </div>
+                    </div>
+                    </div>
+                  <div class="row">
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label>Date & Time</label>
+                        <input type="date" class="form-control date_time" value="" name="date_time" required="required">
+                      </div>
+                    </div>
+                  
+                    <div class="col-md-7">
+                      <div class="">
+                        <label>Amount</label>
+                        <input type="number" class="form-control" name="amount" id="amount" required="required">
+                        <span class="text-danger" id="error_msg" style="display: none;">! Amount cannot be greater than Balance</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="update ml-auto mr-auto"> 
+                          <input type="hidden" name="" value="{{balance}}" id="account_balance">     
+                          <button type="submit" class="btn btn-primary btn-round btn-lg" id="account_submit">Submit</button>       
+                    </div>
+                  </div>
+
+                </form>               
+              </div>
+            </div>
+          </div>
+          {%endif%}
+
+
+        </div>
+
+        <div class="row">
+
+          {%if data.status == '2'%}
+             <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title text-center">  Accounts Details </h4>
+                <hr>
+              </div>
+              <div class="card-body">
+                  <table class="table">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>Date</th>
+                      <th>Detail</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {%if accounts.count > 0%}
+                        {%for account in accounts%}
+                         <tr>
+                          <td>{{account.date |date:"M d, Y (h:i A)"}} : </td>
+                          <td>{{account.detail}}</td>
+                          <td>{{account.amount}}</td>
+                        </tr>
+                        {%endfor%}
+                      {%else%}
+                        <tr>
+                          <td colspan="3"><center>NO DATA AVAILABLE</center> </td>
+                        </tr>
+                      {%endif%}
+                  </tbody>
+              </table> 
+              </div>
+            </div>
+          </div>
+
+          {%endif%}
+
+
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title text-center"> All Follow Up Details </h4>
+                <hr>
+              </div>
+              <div class="card-body">
+                  <table class="table">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>Date</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                        <tr>
+                          <td width="20%">{{data.expected_date |date:"M d, Y (h:i A)"}} : </td>
+                          <td width="80%">{{data.follow_up}}</td>
+                        </tr>
+                        {%for follow in follow_ups%}
+                         <tr>
+                          <td width="20%">{{follow.date |date:"M d, Y (h:i A)"}} : </td>
+                          <td width="80%">{{follow.description}}</td>
+                        </tr>
+                        {%endfor%}
+                  </tbody>
+              </table> 
+              </div>
+            </div>
+          </div>
+
+
+
+
+        </div>
+  
+
+</div>
+
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"></h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        
+      </div>
+      <div class="modal-body">
+        <p><b>Name : </b> {{data.first_name}} {{data.last_name}}</p>
+        <p><b>Date of Birth : </b> {{data.date_of_birth}}</p>
+        <p><b>Qualification : </b> {{data.qualification}}</p>
+        <p><b>Address : </b> {{data.address}}</p>
+        <p><b>Experience : </b> {{data.experience}} Years</p>
+        <p><b>Phone : </b> {{data.contact}}</p>
+        <p><b>Email : </b> {{data.email}}</p>
+        <p><b>Course : </b> {{data.course}}</p>
+        <p><b>Course Type : </b> {% if data.course_type == '0'%}Basic Training {%else%} On Job Training {%endif%}</p>
+        <p><b>Expected : </b> {{data.expected_date}}</p>
+        <p><b>Lead Source : </b> {{data.lead_sourse}}</p>
+        <p><b>Lead Date : </b> {{data.lead_date}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+{%endblock%}
