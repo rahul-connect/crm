@@ -5,3 +5,12 @@ A Customer Relation Management System built using Django and MySQL. Its speciall
 ![alt tag](https://github.com/rahul-connect/crm/blob/master/crm_home.png?raw=true "Description goes here")
 
 ![alt tag](https://github.com/rahul-connect/crm/blob/master/crm_page.png?raw=true "Description goes here")
+
+![alt tag](https://github.com/rahul-connect/crm/blob/master/crm_page2.png?raw=true "Description goes here")
+
+![alt tag](https://github.com/rahul-connect/crm/blob/master/crm_page3.png?raw=true "Description goes here")
+
+![alt tag](https://github.com/rahul-connect/crm/blob/master/crm_page4.png?raw=true "Description goes here")
+
+![alt tag](https://github.com/rahul-connect/crm/blob/master/crm_page5.png?raw=true "Description goes here")
+
